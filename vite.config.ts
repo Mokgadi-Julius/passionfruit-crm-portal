@@ -18,7 +18,9 @@ export default defineConfig({
     host: true,
     allowedHosts: [
       'passionfruit-crm-portal-production.up.railway.app',
-      '.railway.app'
+      'crm.passionfruitcareers.com',
+      '.railway.app',
+      '.passionfruitcareers.com'
     ],
     proxy: {
       '/api': {
