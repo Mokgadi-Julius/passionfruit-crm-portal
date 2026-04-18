@@ -116,20 +116,48 @@ const Dashboard: React.FC<DashboardProps> = ({ token }) => {
             <h2>User Growth (Last 30 Days)</h2>
             <ResponsiveContainer width="100%" height={350}>
               <LineChart data={growthData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis
                   dataKey="date"
                   tickFormatter={(date) => new Date(date).toLocaleDateString('en', { month: 'short', day: 'numeric' })}
-                  stroke="#666"
+                  stroke="#999"
+                  style={{ fontSize: '12px' }}
                 />
-                <YAxis stroke="#666" />
+                <YAxis stroke="#999" style={{ fontSize: '12px' }} />
                 <Tooltip
-                  contentStyle={{ background: '#fff', border: '1px solid #ddd', borderRadius: '8px' }}
+                  contentStyle={{
+                    background: 'rgba(255, 255, 255, 0.98)',
+                    border: '1px solid #e0e0e0',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                    padding: '12px'
+                  }}
                   labelFormatter={(date) => new Date(date).toLocaleDateString('en', { month: 'long', day: 'numeric', year: 'numeric' })}
                 />
-                <Legend />
-                <Line type="monotone" dataKey="job_seekers" stroke="#2196F3" name="Job Seekers" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
-                <Line type="monotone" dataKey="employers" stroke="#F4E04D" name="Employers" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                <Legend
+                  wrapperStyle={{ paddingTop: '20px' }}
+                  iconType="circle"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="job_seekers"
+                  stroke="#1976D2"
+                  name="Job Seekers"
+                  strokeWidth={4}
+                  dot={{ r: 5, fill: '#1976D2', strokeWidth: 2, stroke: '#fff' }}
+                  activeDot={{ r: 7, fill: '#1565C0', strokeWidth: 3, stroke: '#fff' }}
+                  filter="drop-shadow(0px 2px 4px rgba(25, 118, 210, 0.3))"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="employers"
+                  stroke="#F9A825"
+                  name="Employers"
+                  strokeWidth={4}
+                  dot={{ r: 5, fill: '#F9A825', strokeWidth: 2, stroke: '#fff' }}
+                  activeDot={{ r: 7, fill: '#F57F17', strokeWidth: 3, stroke: '#fff' }}
+                  filter="drop-shadow(0px 2px 4px rgba(249, 168, 37, 0.3))"
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>
