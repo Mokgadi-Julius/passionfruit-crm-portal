@@ -133,8 +133,7 @@ const Dashboard: React.FC<DashboardProps> = ({ token }) => {
                   allowDecimals={false}
                   tick={{ fill: '#666' }}
                   width={50}
-                  domain={[0, 'auto']}
-                  padding={{ top: 30 }}
+                  domain={[0, (dataMax: number) => Math.ceil(dataMax * 1.15)]}
                 />
                 <Tooltip
                   contentStyle={{
