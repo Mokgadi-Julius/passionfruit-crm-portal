@@ -114,19 +114,23 @@ const Dashboard: React.FC<DashboardProps> = ({ token }) => {
         {growthData.length > 0 && (
           <div className="chart-container">
             <h2>User Growth (Last 30 Days)</h2>
-            <ResponsiveContainer width="100%" height={400}>
-              <LineChart data={growthData} margin={{ top: 30, right: 30, left: 10, bottom: 10 }}>
+            <ResponsiveContainer width="100%" height={420}>
+              <LineChart data={growthData} margin={{ top: 40, right: 40, left: 20, bottom: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis
                   dataKey="date"
                   tickFormatter={(date) => new Date(date).toLocaleDateString('en', { month: 'short', day: 'numeric' })}
                   stroke="#999"
                   style={{ fontSize: '12px' }}
+                  height={60}
                 />
                 <YAxis
                   stroke="#999"
                   style={{ fontSize: '12px' }}
-                  domain={[0, 'dataMax + 2']}
+                  width={50}
+                  allowDecimals={false}
+                  domain={[0, (dataMax: number) => Math.ceil(dataMax * 1.2)]}
+                  padding={{ top: 20, bottom: 0 }}
                 />
                 <Tooltip
                   contentStyle={{
