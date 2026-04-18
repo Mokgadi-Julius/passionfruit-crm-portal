@@ -31,28 +31,7 @@ const Dashboard: React.FC<DashboardProps> = ({ token }) => {
 
       const data = await response.json();
       setStats(data.stats);
-
-      // Transform data to cumulative totals for smoother chart
-      const growthData = data.growthData || [];
-      if (growthData.length > 0) {
-        let cumulativeJobSeekers = 0;
-        let cumulativeEmployers = 0;
-        const cumulativeData = growthData.map((item: any) => {
-          cumulativeJobSeekers += parseInt(item.job_seekers) || 0;
-          cumulativeEmployers += parseInt(item.employers) || 0;
-          return {
-            ...item,
-            cumulative_job_seekers: cumulativeJobSeekers,
-            cumulative_employers: cumulativeEmployers,
-            job_seekers: parseInt(item.job_seekers) || 0,
-            employers: parseInt(item.employers) || 0,
-          };
-        });
-        setGrowthData(cumulativeData);
-      } else {
-        setGrowthData([]);
-      }
-
+      setGrowthData(data.growthData);
       setTopEmployers(data.topEmployers);
       setRecentActivity(data.recentActivity);
     } catch (error) {
@@ -134,33 +113,26 @@ const Dashboard: React.FC<DashboardProps> = ({ token }) => {
         {/* Growth Chart */}
         {growthData.length > 0 && (
           <div className="chart-container">
-            <h2>Cumulative User Growth (Last 30 Days)</h2>
+            <h2>User Growth (Last 30 Days)</h2>
             <p style={{ fontSize: '14px', color: '#666', marginTop: '-8px' }}>
-              Total users accumulated over time
+              New signups per day
             </p>
-            <ResponsiveContainer width="100%" height={400}>
-              <LineChart data={growthData} margin={{ top: 20, right: 30, left: 20, bottom: 10 }}>
-                <defs>
-                  <linearGradient id="colorJobSeekers" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#1976D2" stopOpacity={0.1}/>
-                    <stop offset="95%" stopColor="#1976D2" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="colorEmployers" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#F9A825" stopOpacity={0.1}/>
-                    <stop offset="95%" stopColor="#F9A825" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f5f5f5" />
+            <ResponsiveContainer width="100%" height={380}>
+              <LineChart data={growthData} margin={{ top: 25, right: 30, left: 0, bottom: 10 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
                 <XAxis
                   dataKey="date"
                   tickFormatter={(date) => new Date(date).toLocaleDateString('en', { month: 'short', day: 'numeric' })}
                   stroke="#999"
-                  style={{ fontSize: '11px' }}
+                  style={{ fontSize: '12px' }}
+                  tick={{ fill: '#666' }}
                 />
                 <YAxis
                   stroke="#999"
-                  style={{ fontSize: '11px' }}
+                  style={{ fontSize: '12px' }}
                   allowDecimals={false}
+                  tick={{ fill: '#666' }}
+                  width={40}
                 />
                 <Tooltip
                   contentStyle={{
@@ -168,42 +140,33 @@ const Dashboard: React.FC<DashboardProps> = ({ token }) => {
                     border: '1px solid #e0e0e0',
                     borderRadius: '12px',
                     boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                    padding: '12px'
+                    padding: '12px 16px'
                   }}
                   labelFormatter={(date) => new Date(date).toLocaleDateString('en', { month: 'long', day: 'numeric', year: 'numeric' })}
-                  formatter={(value: number, name: string) => {
-                    const displayName = name === 'cumulative_job_seekers' ? 'Total Job Seekers' : 'Total Employers';
-                    return [value.toLocaleString(), displayName];
-                  }}
                 />
                 <Legend
-                  wrapperStyle={{ paddingTop: '15px' }}
+                  wrapperStyle={{ paddingTop: '20px' }}
                   iconType="circle"
-                  formatter={(value: string) => {
-                    if (value === 'cumulative_job_seekers') return 'Job Seekers';
-                    if (value === 'cumulative_employers') return 'Employers';
-                    return value;
-                  }}
                 />
                 <Line
                   type="monotone"
-                  dataKey="cumulative_job_seekers"
-                  stroke="#1976D2"
-                  name="cumulative_job_seekers"
+                  dataKey="job_seekers"
+                  stroke="#2196F3"
+                  name="Job Seekers"
                   strokeWidth={3}
-                  dot={{ r: 4, fill: '#1976D2', strokeWidth: 2, stroke: '#fff' }}
-                  activeDot={{ r: 6, fill: '#1565C0', strokeWidth: 2, stroke: '#fff' }}
-                  fill="url(#colorJobSeekers)"
+                  dot={{ r: 5, fill: '#2196F3', strokeWidth: 0 }}
+                  activeDot={{ r: 7, fill: '#1976D2', strokeWidth: 3, stroke: '#fff' }}
+                  connectNulls
                 />
                 <Line
                   type="monotone"
-                  dataKey="cumulative_employers"
-                  stroke="#F9A825"
-                  name="cumulative_employers"
+                  dataKey="employers"
+                  stroke="#FF9800"
+                  name="Employers"
                   strokeWidth={3}
-                  dot={{ r: 4, fill: '#F9A825', strokeWidth: 2, stroke: '#fff' }}
-                  activeDot={{ r: 6, fill: '#F57F17', strokeWidth: 2, stroke: '#fff' }}
-                  fill="url(#colorEmployers)"
+                  dot={{ r: 5, fill: '#FF9800', strokeWidth: 0 }}
+                  activeDot={{ r: 7, fill: '#F57C00', strokeWidth: 3, stroke: '#fff' }}
+                  connectNulls
                 />
               </LineChart>
             </ResponsiveContainer>
