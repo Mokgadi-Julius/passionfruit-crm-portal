@@ -117,8 +117,8 @@ const Dashboard: React.FC<DashboardProps> = ({ token }) => {
             <p style={{ fontSize: '14px', color: '#666', marginTop: '-8px' }}>
               New signups per day
             </p>
-            <ResponsiveContainer width="100%" height={380}>
-              <LineChart data={growthData} margin={{ top: 25, right: 30, left: 0, bottom: 10 }}>
+            <ResponsiveContainer width="100%" height={400}>
+              <LineChart data={growthData} margin={{ top: 30, right: 30, left: 10, bottom: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
                 <XAxis
                   dataKey="date"
@@ -132,7 +132,9 @@ const Dashboard: React.FC<DashboardProps> = ({ token }) => {
                   style={{ fontSize: '12px' }}
                   allowDecimals={false}
                   tick={{ fill: '#666' }}
-                  width={40}
+                  width={50}
+                  domain={[0, 'auto']}
+                  padding={{ top: 30 }}
                 />
                 <Tooltip
                   contentStyle={{
