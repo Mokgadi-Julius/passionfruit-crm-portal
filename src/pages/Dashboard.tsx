@@ -113,41 +113,77 @@ const Dashboard: React.FC<DashboardProps> = ({ token }) => {
         {/* Growth Chart */}
         {growthData.length > 0 && (
           <div className="chart-container">
-            <h2>User Growth (Last 30 Days)</h2>
-            <p style={{ fontSize: '14px', color: '#666', marginTop: '-8px', marginBottom: '20px' }}>
-              Daily new signups
+            <h2>📈 User Growth (Last 30 Days)</h2>
+            <p style={{ fontSize: '14px', color: '#666', marginTop: '-8px', marginBottom: '24px' }}>
+              Daily new signups • {growthData.reduce((sum: number, d: any) => sum + (parseInt(d.job_seekers) || 0) + (parseInt(d.employers) || 0), 0)} total new users
             </p>
-            <ResponsiveContainer width="100%" height={450}>
-              <BarChart data={growthData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+            <ResponsiveContainer width="100%" height={420}>
+              <BarChart
+                data={growthData}
+                margin={{ top: 20, right: 30, left: 10, bottom: 60 }}
+                barGap={2}
+                barCategoryGap="15%"
+              >
+                <defs>
+                  <linearGradient id="colorJobSeekers" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#2196F3" stopOpacity={1}/>
+                    <stop offset="100%" stopColor="#1976D2" stopOpacity={1}/>
+                  </linearGradient>
+                  <linearGradient id="colorEmployers" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#FF9800" stopOpacity={1}/>
+                    <stop offset="100%" stopColor="#F57C00" stopOpacity={1}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f5f5f5" vertical={false} />
                 <XAxis
                   dataKey="date"
                   tickFormatter={(date) => new Date(date).toLocaleDateString('en', { month: 'short', day: 'numeric' })}
-                  stroke="#999"
-                  style={{ fontSize: '11px' }}
+                  stroke="#bbb"
+                  style={{ fontSize: '11px', fontWeight: '500' }}
                   angle={-45}
                   textAnchor="end"
                   height={80}
+                  tick={{ fill: '#666' }}
                 />
                 <YAxis
-                  stroke="#999"
-                  style={{ fontSize: '12px' }}
+                  stroke="#bbb"
+                  style={{ fontSize: '12px', fontWeight: '500' }}
                   allowDecimals={false}
-                  width={50}
+                  width={45}
+                  tick={{ fill: '#666' }}
                 />
                 <Tooltip
                   contentStyle={{
-                    background: 'rgba(255, 255, 255, 0.98)',
-                    border: '1px solid #e0e0e0',
-                    borderRadius: '12px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                    padding: '12px 16px'
+                    background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)',
+                    border: 'none',
+                    borderRadius: '16px',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                    padding: '16px 20px'
                   }}
-                  labelFormatter={(date) => new Date(date).toLocaleDateString('en', { month: 'long', day: 'numeric', year: 'numeric' })}
+                  labelStyle={{ fontWeight: '700', marginBottom: '8px', color: '#333' }}
+                  labelFormatter={(date) => new Date(date).toLocaleDateString('en', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+                  itemStyle={{ fontWeight: '600', padding: '4px 0' }}
+                  cursor={{ fill: 'rgba(33, 150, 243, 0.05)' }}
                 />
-                <Legend wrapperStyle={{ paddingTop: '10px' }} />
-                <Bar dataKey="job_seekers" fill="#2196F3" name="Job Seekers" radius={[8, 8, 0, 0]} />
-                <Bar dataKey="employers" fill="#FF9800" name="Employers" radius={[8, 8, 0, 0]} />
+                <Legend
+                  wrapperStyle={{ paddingTop: '20px' }}
+                  iconType="circle"
+                  iconSize={12}
+                />
+                <Bar
+                  dataKey="job_seekers"
+                  fill="url(#colorJobSeekers)"
+                  name="Job Seekers"
+                  radius={[6, 6, 0, 0]}
+                  maxBarSize={40}
+                />
+                <Bar
+                  dataKey="employers"
+                  fill="url(#colorEmployers)"
+                  name="Employers"
+                  radius={[6, 6, 0, 0]}
+                  maxBarSize={40}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
