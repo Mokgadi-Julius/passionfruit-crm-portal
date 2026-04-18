@@ -14,7 +14,6 @@ const Dashboard: React.FC<DashboardProps> = ({ token }) => {
   const [topEmployers, setTopEmployers] = useState<any[]>([]);
   const [recentActivity, setRecentActivity] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [chartHeight, setChartHeight] = useState(400);
 
   useEffect(() => {
     fetchDashboardData();
@@ -114,88 +113,27 @@ const Dashboard: React.FC<DashboardProps> = ({ token }) => {
         {/* Growth Chart */}
         {growthData.length > 0 && (
           <div className="chart-container">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-              <div>
-                <h2>User Growth (Last 30 Days)</h2>
-                <p style={{ fontSize: '14px', color: '#666', marginTop: '-8px', marginBottom: 0 }}>
-                  New signups per day
-                </p>
-              </div>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button
-                  onClick={() => setChartHeight(prev => Math.min(prev + 100, 800))}
-                  style={{
-                    padding: '8px 16px',
-                    background: '#2196F3',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}
-                  title="Zoom In"
-                >
-                  🔍+ Zoom In
-                </button>
-                <button
-                  onClick={() => setChartHeight(prev => Math.max(prev - 100, 300))}
-                  style={{
-                    padding: '8px 16px',
-                    background: '#666',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}
-                  title="Zoom Out"
-                >
-                  🔍- Zoom Out
-                </button>
-                <button
-                  onClick={() => setChartHeight(400)}
-                  style={{
-                    padding: '8px 16px',
-                    background: '#FF9800',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: '600'
-                  }}
-                  title="Reset Zoom"
-                >
-                  ↺ Reset
-                </button>
-              </div>
-            </div>
-            <ResponsiveContainer width="100%" height={chartHeight}>
-              <LineChart data={growthData} margin={{ top: 30, right: 30, left: 10, bottom: 10 }}>
+            <h2>User Growth (Last 30 Days)</h2>
+            <p style={{ fontSize: '14px', color: '#666', marginTop: '-8px', marginBottom: '20px' }}>
+              Daily new signups
+            </p>
+            <ResponsiveContainer width="100%" height={450}>
+              <BarChart data={growthData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
                 <XAxis
                   dataKey="date"
                   tickFormatter={(date) => new Date(date).toLocaleDateString('en', { month: 'short', day: 'numeric' })}
                   stroke="#999"
-                  style={{ fontSize: '12px' }}
-                  tick={{ fill: '#666' }}
+                  style={{ fontSize: '11px' }}
+                  angle={-45}
+                  textAnchor="end"
+                  height={80}
                 />
                 <YAxis
                   stroke="#999"
                   style={{ fontSize: '12px' }}
                   allowDecimals={false}
-                  tick={{ fill: '#666' }}
                   width={50}
-                  padding={{ top: 20 }}
-                  domain={[0, (dataMax: number) => Math.max(10, Math.ceil(dataMax * 1.25))]}
                 />
                 <Tooltip
                   contentStyle={{
@@ -207,31 +145,10 @@ const Dashboard: React.FC<DashboardProps> = ({ token }) => {
                   }}
                   labelFormatter={(date) => new Date(date).toLocaleDateString('en', { month: 'long', day: 'numeric', year: 'numeric' })}
                 />
-                <Legend
-                  wrapperStyle={{ paddingTop: '20px' }}
-                  iconType="circle"
-                />
-                <Line
-                  type="monotone"
-                  dataKey="job_seekers"
-                  stroke="#2196F3"
-                  name="Job Seekers"
-                  strokeWidth={3}
-                  dot={{ r: 5, fill: '#2196F3', strokeWidth: 0 }}
-                  activeDot={{ r: 7, fill: '#1976D2', strokeWidth: 3, stroke: '#fff' }}
-                  connectNulls
-                />
-                <Line
-                  type="monotone"
-                  dataKey="employers"
-                  stroke="#FF9800"
-                  name="Employers"
-                  strokeWidth={3}
-                  dot={{ r: 5, fill: '#FF9800', strokeWidth: 0 }}
-                  activeDot={{ r: 7, fill: '#F57C00', strokeWidth: 3, stroke: '#fff' }}
-                  connectNulls
-                />
-              </LineChart>
+                <Legend wrapperStyle={{ paddingTop: '10px' }} />
+                <Bar dataKey="job_seekers" fill="#2196F3" name="Job Seekers" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="employers" fill="#FF9800" name="Employers" radius={[8, 8, 0, 0]} />
+              </BarChart>
             </ResponsiveContainer>
           </div>
         )}
